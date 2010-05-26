@@ -84,27 +84,55 @@ void write_error_word(                 //write special word
                       char *charlist,  /*true chars */
                       int charcount    /*no of true chars */
                      );
-void writeblob(             //write a blob
-               FILE *name,  /*file to write */
-               TBLOB *blob  /*blob to write */
+/** 
+ * write a blob
+ * @param name file to write
+ * @param blob blob to write
+ */
+void writeblob(
+               FILE *name,
+               TBLOB *blob
               );
-void serial_outlines(                             //serialize
-                     FILE *name,                  /*file to write to */
-                     TBLOB *blob,                 /*current blob */
-                     register TESSLINE *outline,  /*current outline */
-                     int *outlineno               /*current serial no */
+/** 
+ * serialize
+ * @param name file to write to
+ * @param blob current blob
+ * @param outline current outline
+ * @param outlineno current serial no
+ */
+void serial_outlines(
+                     FILE *name,
+                     TBLOB *blob,
+                     register TESSLINE *outline,
+                     int *outlineno
                     );
-int countloop(                          //count loopsize
-              register BYTEVEC *vector  /*vectors to count */
+/** 
+ * count loopsize
+ * @param vector vectors to count
+ */
+int countloop(
+              register BYTEVEC *vector
              );
-int outlineserial(                             //get serial no
-                  register TESSLINE *outline,  /*start of serach */
-                  register TESSLINE *target,   /*outline to find */
-                  int serial                   /*serial no so far */
+/** 
+ * get serial no
+ * @param outline start of search
+ * @param target outline to find
+ * @param serial serial no so far
+ */
+int outlineserial(
+                  register TESSLINE *outline,
+                  register TESSLINE *target,
+                  int serial
                  );
-void writegph(              //interface to fwrite
-              FILE *name,   /*file to write */
-              void *start,  /*buffer to write */
-              int size      /*amount to write */
+/** 
+ * Interface to fwrite 
+ * @param name file to write
+ * @param start buffer to write
+ * @param size amount to write
+ */
+void writegph(
+              FILE *name,
+              void *start,
+              int size
              );
 #endif

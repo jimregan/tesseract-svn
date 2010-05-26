@@ -39,15 +39,16 @@ extern STRING_VAR_H(exposure_pattern, "exp",
 
 static const int kMinFragmentOutlineArea = 10;
 
-// Register uch with unicharset_boxes.
+/** Register uch with unicharset_boxes. */
 UNICHAR_ID register_char(const char *uch);
 
 void apply_boxes(const STRING& filename,
-                 BLOCK_LIST *block_list    //real blocks
+                 BLOCK_LIST *block_list    ///< real blocks
                 );
 
-void clear_any_old_text(                        //remove correct text
-                        BLOCK_LIST *block_list  //real blocks
+/** remove correct text */
+void clear_any_old_text(
+                        BLOCK_LIST *block_list  ///< real blocks
                        );
 
 BOOL8 read_next_box(int page,
@@ -56,8 +57,8 @@ BOOL8 read_next_box(int page,
                     UNICHAR_ID *uch_id);
 
 ROW *find_row_of_box(
-                     BLOCK_LIST *block_list,  //real blocks
-                     const TBOX &box,               //from boxfile
+                     BLOCK_LIST *block_list,  ///< real blocks
+                     const TBOX &box,               ///< from boxfile
                      inT16 &block_id,
                      inT16 &row_id_to_process);
 
@@ -74,7 +75,7 @@ inT16 resegment_box(
                     bool learning);
 
 void tidy_up(
-             BLOCK_LIST *block_list,  //real blocks
+             BLOCK_LIST *block_list,  ///< real blocks
              inT16 &ok_char_count,
              inT16 &ok_row_count,
              inT16 &unlabelled_words,
