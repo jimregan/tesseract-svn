@@ -115,13 +115,16 @@ extern INT_VAR_H (crunch_leave_uc_strings, 4,
 extern INT_VAR_H (crunch_long_repetitions, 3,
 "Crunch words with long repetitions");
 extern INT_VAR_H (crunch_debug, 0, "As it says");
-inT16 word_blob_quality(  //Blob seg changes
+/** Blob seg changes */
+inT16 word_blob_quality(
                         WERD_RES *word,
                         ROW *row);
 BOOL8 crude_match_blobs(PBLOB *blob1, PBLOB *blob2);
-inT16 word_outline_errs(  //Outline count errs
+/** Outline count errs */
+inT16 word_outline_errs(
                         WERD_RES *word);
-void word_char_quality(  //Blob seg changes
+/** Blob seg changes */
+void word_char_quality(
                        WERD_RES *word,
                        ROW *row,
                        inT16 *match_count,

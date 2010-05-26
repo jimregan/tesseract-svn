@@ -16,6 +16,14 @@
  ** limitations under the License.
  *
  **********************************************************************/
+/**
+ * @file     charcut.h  
+ * @note     Formerly charclip.h
+ * @brief    Code for character clipping
+ * @author   Phil Cheatle
+ * @date     Created Wed Nov 11 08:35:15 GMT 1992
+ *
+ */
 
 #ifndef           CHARCUT_H
 #define           CHARCUT_H
@@ -25,8 +33,8 @@
 #include          "notdll.h"
 class ScrollView;
 
-/*************************************************************************
- * CLASS PIXROW
+/**
+ * @class PIXROW
  *
  * This class describes the pixels occupied by a blob. It uses two arrays, (min
  * and max), each with one element per row, to identify the min and max x
@@ -34,7 +42,7 @@ class ScrollView;
  * The number of rows used to describe the blob is held in row_count - note that
  * some rows may be unoccupied - signified by max < min. The page coordinate of
  * the row defined by min[0] and max[0] is held in row_offset.
- *************************************************************************/
+ */
 
 class PIXROW:public ELIST_LINK
 {
@@ -64,9 +72,11 @@ class PIXROW:public ELIST_LINK
       max = NULL;
     }
 
-    /** use current settings */
-    void plot(
-              ScrollView* fd) const;  ///< where to paint
+    /** 
+     * use current settings 
+     * @param fd where to paint
+     */
+    void plot(ScrollView* fd) const;
 
     /** 
      * return bounding box
@@ -76,22 +86,40 @@ class PIXROW:public ELIST_LINK
 
     bool bad_box(int xsize, int ysize) const;
 
-    void contract(                           ///< force end on black
-                  IMAGELINE *imlines,        ///< image array
-                  inT16 x_offset,            ///< of pixels[0]
-                  inT16 foreground_colour);  ///< 0 or 1
+    /**
+     * force end on black
+     * @param imlines image array
+     * @param x_offset of pixels[0]
+     * @param foreground_colour 0 or 1
+     */
+    void contract(
+                  IMAGELINE *imlines,
+                  inT16 x_offset,
+                  inT16 foreground_colour);
 
-    BOOL8 extend(IMAGELINE *imlines,        ///< image array
+    /**
+     * @param imlines image array
+     * @param prev for prev blob
+     * @param next for next blob
+     * @param foreground_colour 0 or 1
+     */
+    BOOL8 extend(IMAGELINE *imlines,
                  TBOX &imbox,
-                 PIXROW *prev,              ///< for prev blob
-                 PIXROW *next,              ///< for next blob
-                 inT16 foreground_colour);  ///< 0 or 1
+                 PIXROW *prev,
+                 PIXROW *next,
+                 inT16 foreground_colour);
 
-    void char_clip_image(IMAGELINE *imlines,    ///< box of imlines extnt
+    /**
+     * @param imlines box of imlines extnt
+     * @param row row containing word
+     * @param clip_image unscaled char image
+     * @param baseline_pos baseline ht in image
+     */
+    void char_clip_image(IMAGELINE *imlines,
                          TBOX &im_box,
-                         ROW *row,              ///< row containing word
-                         IMAGE &clip_image,     ///< unscaled char image
-                         float &baseline_pos);  ///< baseline ht in image
+                         ROW *row,
+                         IMAGE &clip_image,
+                         float &baseline_pos);
 
 };
 
