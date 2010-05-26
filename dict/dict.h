@@ -39,7 +39,7 @@ extern INT_VAR_H(hyphen_debug_level, 0, "Debug level for hyphenated words.");
 #define GOOD_WERD               1.1
 #define OK_WERD                 1.3125
 
-// Struct used to hold temporary information about fragments.
+/** Struct used to hold temporary information about fragments. */
 struct CHAR_FRAGMENT_INFO {
   UNICHAR_ID unichar_id;
   const CHAR_FRAGMENT *fragment;
@@ -67,7 +67,7 @@ struct DawgArgs {
   DawgInfoVector *updated_active_dawgs;
   DawgInfoVector *updated_constraints;
   PermuterType permuter;
-  float rating_margin;  // prunning margin ratio
+  float rating_margin;  /** pruning margin ratio */
   float rating_array[MAX_WERD_LENGTH];
 };
 
@@ -87,9 +87,9 @@ class Dict {
 
   /* hyphen.cpp ************************************************************/
 
-  // Returns true if we've recorded the beginning of a hyphenated word.
+  /** Returns true if we've recorded the beginning of a hyphenated word. */
   inline bool hyphenated() { return !last_word_on_line_ && hyphen_word_; }
-  // Size of the base word (the part on the line before) of a hyphenated word.
+  /** Size of the base word (the part on the line before) of a hyphenated word. */
   inline int hyphen_base_size() {
     return this->hyphenated() ? hyphen_word_->length() : 0;
   }
@@ -329,67 +329,68 @@ class Dict {
                                      const Dawg *dawg);
   /* dawg.cpp ****************************************************************/
 
-  // Returns the maximal permuter code (from ccstruct/ratngs.h) if in light
-  // of the current state the letter at word_index in the given word
-  // is allowed according to at least one of the dawgs in dawgs_,
-  // otherwise returns NO_PERM.
-  //
-  // The state is described by void_dawg_args, which are interpreted as
-  // DawgArgs and contain two relevant input vectors: active_dawgs and
-  // constraints. Each entry in the active_dawgs vector contains an index
-  // into the dawgs_ vector and an EDGE_REF that indicates the last edge
-  // followed in the dawg. Each entry in the constraints vector contains
-  // an index into the dawgs_ vector and an EDGE_REF that indicates an edge
-  // in a pattern dawg followed to match a pattern. Currently constraints
-  // are used to save the state of punctuation dawgs after leading
-  // punctuation was found.
-  //
-  // Input:
-  // At word_index 0 dawg_args->active_dawgs should contain an entry for each
-  // dawg whose type has a bit set in kBeginningDawgsType,
-  // dawg_args->constraints should be empty. EDGE_REFs in active_dawgs and
-  // constraints vectors should be initialized to NO_EDGE. If hyphen state
-  // needs to be applied, initial dawg_args->active_dawgs and
-  // dawg_args->constrains can be copied from the saved hyphen state
-  // (maintained by Dict).
-  // For word_index > 0 the corresponding state (active_dawgs and constraints)
-  // can be obtained from dawg_args->updated_* passed to def_letter_is_okay
-  // for word_index-1.
-  // Note: the function assumes that active_dags, constraints and updated_*
-  // member variables of dawg_args are not NULL.
-  //
-  // Output:
-  // The function fills in dawg_args->updated_active_dawgs vector with the
-  // entries for dawgs that contain the word up to the letter at word_index.
-  // The new constraints (if any) are added to dawg_args->updated_constraints,
-  // the constraints from dawg_args->constraints are also copied into it.
-  //
-  // Detailed description:
-  // In order to determine whether the word is still valid after considering
-  // all the letters up to the one at word_index the following is done for
-  // each entry in dawg_args->active_dawgs:
-  //
-  // -- next starting node is obtained from entry.ref and edge_char_of() is
-  //    called to obtain the next edge
-  // -- if a valid edge is found, the function returns the updated permuter
-  //    code true and an entry [entry.dawg_index, edge] is inserted in
-  //    dawg_args->updated_active_dawgs
-  //    otherwise:
-  //    -- if we are dealing with dawg of type DAWG_TYPE_PUNCTUATION,
-  //       edge_char_of() is called again, but now with kPatternUnicharID
-  //       as unichar_id; if a valid edge is found it is recorded in
-  //       dawg_args->updated_constraints
-  //    -- the function checks whether the word can end with the previous
-  //       letter
-  //    -- each successor of the dawg (e.g. dawgs with type DAWG_TYPE_WORD
-  //       could be successors to dawgs with type DAWG_TYPE_PUNCTUATION; the
-  //       successors are defined by successors_ vector) is explored and if
-  //       a letter is found in the successor dawg, a new entry is inserted
-  //       into dawg_args->updated_active_dawgs with EDGE_REF being either
-  //       NO_EDGE or an EDGE_REF recorded in constraints vector for the
-  //       corresponding dawg index
+  /**
+   * Returns the maximal permuter code (from ccstruct/ratngs.h) if in light
+   * of the current state the letter at word_index in the given word
+   * is allowed according to at least one of the dawgs in dawgs_,
+   * otherwise returns NO_PERM.
+   *
+   * The state is described by void_dawg_args, which are interpreted as
+   * DawgArgs and contain two relevant input vectors: active_dawgs and
+   * constraints. Each entry in the active_dawgs vector contains an index
+   * into the dawgs_ vector and an EDGE_REF that indicates the last edge
+   * followed in the dawg. Each entry in the constraints vector contains
+   * an index into the dawgs_ vector and an EDGE_REF that indicates an edge
+   * in a pattern dawg followed to match a pattern. Currently constraints
+   * are used to save the state of punctuation dawgs after leading
+   * punctuation was found.
+   *
+   * Input:
+   * At word_index 0 dawg_args->active_dawgs should contain an entry for each
+   * dawg whose type has a bit set in kBeginningDawgsType,
+   * dawg_args->constraints should be empty. EDGE_REFs in active_dawgs and
+   * constraints vectors should be initialized to NO_EDGE. If hyphen state
+   * needs to be applied, initial dawg_args->active_dawgs and
+   * dawg_args->constrains can be copied from the saved hyphen state
+   * (maintained by Dict).
+   * For word_index > 0 the corresponding state (active_dawgs and constraints)
+   * can be obtained from dawg_args->updated_* passed to def_letter_is_okay
+   * for word_index-1.
+   * Note: the function assumes that active_dags, constraints and updated_*
+   * member variables of dawg_args are not NULL.
+   *
+   * Output:
+   * The function fills in dawg_args->updated_active_dawgs vector with the
+   * entries for dawgs that contain the word up to the letter at word_index.
+   * The new constraints (if any) are added to dawg_args->updated_constraints,
+   * the constraints from dawg_args->constraints are also copied into it.
+   *
+   * Detailed description:
+   * In order to determine whether the word is still valid after considering
+   * all the letters up to the one at word_index the following is done for
+   * each entry in dawg_args->active_dawgs:
+   *
+   *  - next starting node is obtained from entry.ref and edge_char_of() is
+   *    called to obtain the next edge
+   *  - if a valid edge is found, the function returns the updated permuter
+   *    code true and an entry [entry.dawg_index, edge] is inserted in
+   *    dawg_args->updated_active_dawgs
+   *    otherwise:
+   *    - if we are dealing with dawg of type DAWG_TYPE_PUNCTUATION,
+   *      edge_char_of() is called again, but now with kPatternUnicharID
+   *      as unichar_id; if a valid edge is found it is recorded in
+   *      dawg_args->updated_constraints
+   *    - the function checks whether the word can end with the previous
+   *      letter
+   *    - each successor of the dawg (e.g. dawgs with type DAWG_TYPE_WORD
+   *      could be successors to dawgs with type DAWG_TYPE_PUNCTUATION; the
+   *      successors are defined by successors_ vector) is explored and if
+   *      a letter is found in the successor dawg, a new entry is inserted
+   *      into dawg_args->updated_active_dawgs with EDGE_REF being either
+   *      NO_EDGE or an EDGE_REF recorded in constraints vector for the
+   *      corresponding dawg index
+   */
 
-  //
   int def_letter_is_okay(void* void_dawg_args, int word_index,
                          const void* word, bool word_end);
 
@@ -397,15 +398,17 @@ class Dict {
                          const void* word, bool word_end);
   int (Dict::*letter_is_okay_)(void* void_dawg_args, int word_index,
                                const void *word, bool word_end);
-  // Return the number of dawgs in the dawgs_ vector.
+  /** Return the number of dawgs in the dawgs_ vector. */
   inline const int NumDawgs() const { return dawgs_.size(); }
-  // Return i-th dawg pointer recorded in the dawgs_ vector.
+  /** Return i-th dawg pointer recorded in the dawgs_ vector. */
   inline const Dawg *GetDawg(int index) const { return dawgs_[index]; }
-  // At word ending make sure all the recorded constraints are satisfied.
-  // Each constraint signifies that we found a beginning pattern in a
-  // pattern dawg. Check that this pattern can end here (e.g. if some
-  // leading punctuation is found this would ensure that we are not
-  // expecting any particular trailing punctuation after the word).
+  /**
+   * At word ending make sure all the recorded constraints are satisfied.
+   * Each constraint signifies that we found a beginning pattern in a
+   * pattern dawg. Check that this pattern can end here (e.g. if some
+   * leading punctuation is found this would ensure that we are not
+   * expecting any particular trailing punctuation after the word).
+   */
   inline bool ConstraintsOk(const DawgInfoVector &constraints,
                             int word_end, DawgType current_dawg_type) {
     if (!word_end) return true;
@@ -440,23 +443,27 @@ class Dict {
   int valid_word(const char *string);
 
  private:
-  // Private member variables.
+  /** Private member variables. */
   Image* image_ptr_;
-  // Table that stores ambiguities computed during training
-  // (loaded when NoDangerousAmbigs() is called for the first time).
-  // Each entry i in the table stores a set of amibiguities whose
-  // wrong ngram starts with unichar id i.
+  /**
+   * Table that stores ambiguities computed during training
+   * (loaded when NoDangerousAmbigs() is called for the first time).
+   * Each entry i in the table stores a set of amibiguities whose
+   * wrong ngram starts with unichar id i.
+   */
   UnicharAmbigs *dang_ambigs_table_;
-  // Same as above, but for ambiguities with replace flag set.
+  /** Same as above, but for ambiguities with replace flag set. */
   UnicharAmbigs *replace_ambigs_table_;
-  // Flag used to disable accumulation of word choices
-  // during compound word permutation.
+  /**
+   * Flag used to disable accumulation of word choices
+   * during compound word permutation.
+   */
   BOOL8 keep_word_choices_;
-  // Additional certainty padding allowed before a word is rejected.
+  /** Additional certainty padding allowed before a word is rejected. */
   FLOAT32 reject_offset_;
-  // Current word segmentation.
+  /** Current word segmentation. */
   PIECES_STATE current_segmentation_;
-  // Variables to keep track of best/raw word choices.
+  /** Variables to keep track of best/raw word choices. */
   VIABLE_CHOICE best_raw_choice_;
   LIST raw_choices_;
   LIST best_choices_;
