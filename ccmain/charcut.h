@@ -92,8 +92,7 @@ class PIXROW:public ELIST_LINK
      * @param x_offset of pixels[0]
      * @param foreground_colour 0 or 1
      */
-    void contract(
-                  IMAGELINE *imlines,
+    void contract(IMAGELINE *imlines,
                   inT16 x_offset,
                   inT16 foreground_colour);
 
@@ -129,16 +128,14 @@ extern BOOL_VAR_H (show_char_clipping, TRUE, "Show clip image window?");
 extern INT_VAR_H (net_image_width, 40, "NN input image width");
 extern INT_VAR_H (net_image_height, 36, "NN input image height");
 extern INT_VAR_H (net_image_x_height, 22, "NN input image x_height");
-void char_clip_word(
-                    WERD *word,                 ///< word to be processed
+void char_clip_word(WERD *word,                 ///< word to be processed
                     IMAGE &bin_image,           ///< whole image
                     PIXROW_LIST *&pixrow_list,  ///< pixrows built
                     IMAGELINE *&imlines,        ///< lines cut from image
                     TBOX &pix_box               ///< box defining imlines
                    );
 /** get some imagelines */
-IMAGELINE *generate_imlines(
-                            IMAGE &bin_image,  ///< from here
+IMAGELINE *generate_imlines(IMAGE &bin_image,  ///< from here
                             TBOX &pix_box);
                                  
 ScrollView* display_clip_image(WERD *word,           ///< word to be processed
@@ -149,7 +146,6 @@ ScrollView* display_clip_image(WERD *word,           ///< word to be processed
 void display_images(IMAGE &clip_image, IMAGE &scaled_image);
 
 /** plot for all blobs */
-void plot_pixrows(
-                  PIXROW_LIST *pixrow_list,
+void plot_pixrows(PIXROW_LIST *pixrow_list,
                   ScrollView* win);
 #endif
