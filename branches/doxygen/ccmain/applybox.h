@@ -46,24 +46,23 @@ void apply_boxes(const STRING& filename,
                  BLOCK_LIST *block_list    ///< real blocks
                 );
 
-/** remove correct text */
-void clear_any_old_text(
-                        BLOCK_LIST *block_list  ///< real blocks
-                       );
+/** 
+ * remove correct text
+ * @param block_list real blocks
+ */
+void clear_any_old_text(BLOCK_LIST *block_list);
 
 BOOL8 read_next_box(int page,
                     FILE* box_file,
                     TBOX *box,
                     UNICHAR_ID *uch_id);
 
-ROW *find_row_of_box(
-                     BLOCK_LIST *block_list,  ///< real blocks
+ROW *find_row_of_box(BLOCK_LIST *block_list,  ///< real blocks
                      const TBOX &box,               ///< from boxfile
                      inT16 &block_id,
                      inT16 &row_id_to_process);
 
-inT16 resegment_box(
-                    ROW *row,
+inT16 resegment_box(ROW *row,
                     TBOX &box,
                     UNICHAR_ID uch_id,
                     inT16 block_id,
@@ -74,8 +73,7 @@ inT16 resegment_box(
                     bool learn_char_fragments,
                     bool learning);
 
-void tidy_up(
-             BLOCK_LIST *block_list,  ///< real blocks
+void tidy_up(BLOCK_LIST *block_list,  ///< real blocks
              inT16 &ok_char_count,
              inT16 &ok_row_count,
              inT16 &unlabelled_words,

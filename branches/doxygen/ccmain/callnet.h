@@ -25,8 +25,7 @@
 void init_net();
 
 /** Apply image to net */
-void callnet(  
-             float *input_vector,
+void callnet(float *input_vector,
              char *top,
              float *top_score,
              char *next,
