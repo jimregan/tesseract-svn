@@ -68,7 +68,7 @@ BOOL_VAR(tessedit_read_image, TRUE, "Ensure the image is read");
 INT_VAR(tessedit_serial_unlv, 0,
         "0->Whole page, 1->serial no adapt, 2->serial with adapt");
 INT_VAR(tessedit_page_number, -1,
-        "-1 -> All pages, else specifc page to process");
+        "-1 -> All pages, else specific page to process");
 BOOL_VAR(tessedit_write_images, FALSE, "Capture the image from the IPE");
 BOOL_VAR(tessedit_debug_to_screen, FALSE, "Dont use debug file");
 
@@ -175,6 +175,12 @@ int main(int argc, char **argv) {
       argc = 0;
     }
   }
+#ifdef HAVE_CONFIG_H /* Assume that only Unix users care about -v */
+  if (argc == 2 && strcmp(argv[1], "-v") == 0) {
+    fprintf(stderr, "tesseract %s\n", PACKAGE_VERSION);
+    exit(1);
+  }
+#endif
   if (argc < 3) {
     fprintf(stderr, "Usage:%s imagename outputbase [-l lang]"
             " [configfile [[+|-]varfile]...]\n"
@@ -216,11 +222,22 @@ int main(int argc, char **argv) {
   FILE* fp = fopen(argv[1], "rb");
   if (fp == NULL) {
     tprintf("Image file %s cannot be opened!\n", argv[1]);
+    fclose(fp);
     exit(1);
   }
 #ifdef HAVE_LIBLEPT
   int page = page_number;
+  int npages = 0;
   bool is_tiff = fileFormatIsTiff(fp);
+  if (is_tiff) {
+    int tiffstat = tiffGetCount(fp, &npages);
+    if (tiffstat == 1) {
+      fprintf (stderr, "Error reading file %s!\n", argv[1]);
+      fclose(fp);
+      exit(1);
+    }
+    //fprintf (stderr, "%d pages\n", npages);
+  }
   fclose(fp);
 
   Pix *pix;
@@ -235,7 +252,7 @@ int main(int argc, char **argv) {
       // Run tesseract on the page!
       TesseractImage(argv[1], NULL, pix, page, &api, &text_out);
       pixDestroy(&pix);
-      if (tessedit_page_number >= 0) {
+      if (tessedit_page_number >= 0 || npages == 1) {
         break;
       }
     }
@@ -244,17 +261,19 @@ int main(int argc, char **argv) {
     // If the image fails to read, try it as a list of filenames.
     PIX* pix = pixRead(argv[1]);
     if (pix == NULL) {
-      FILE* fp = fopen(argv[1], "r");
-      if (fp == NULL) {
+      FILE* fimg = fopen(argv[1], "r");
+      if (fimg == NULL) {
         tprintf("File %s cannot be opened!\n", argv[1]);
+        fclose(fimg);
         exit(1);
       }
       char filename[MAX_PATH];
-      while (fgets(filename, sizeof(filename), fp) != NULL) {
+      while (fgets(filename, sizeof(filename), fimg) != NULL) {
         chomp_string(filename);
         pix = pixRead(filename);
         if (pix == NULL) {
           tprintf("Image file %s cannot be read!\n", filename);
+          fclose(fimg);
           exit(1);
         }
         tprintf("Page %d : %s\n", page, filename);
@@ -262,7 +281,7 @@ int main(int argc, char **argv) {
         pixDestroy(&pix);
         ++page;
       }
-      fclose(fp);
+      fclose(fimg);
     } else {
       TesseractImage(argv[1], NULL, pix, 0, &api, &text_out);
       pixDestroy(&pix);
@@ -325,12 +344,19 @@ int main(int argc, char **argv) {
 #endif
 #endif  // HAVE_LIBLEPT
 
+  //no longer using ext or fp
+#ifdef _TIFFIO_
+  delete[] ext;
+#endif
+  fclose(fp);
+
   bool output_hocr = tessedit_create_hocr;
   outfile = argv[2];
-  outfile += output_hocr ? ".html" : ".txt";
-  fp = fopen(outfile.string(), "w");
-  if (fp == NULL) {
+  outfile += output_hocr ? ".html" : tessedit_create_boxfile ? ".box" : ".txt";
+  FILE* fout = fopen(outfile.string(), "w");
+  if (fout == NULL) {
     tprintf("Cannot create output file %s\n", outfile.string());
+    fclose(fout);
     exit(1);
   }
   if (output_hocr) {
@@ -341,12 +367,12 @@ int main(int argc, char **argv) {
         "<meta http-equiv=\"Content-Type\" content=\"text/html;"
         "charset=utf-8\" >\n<meta name='ocr-system' content='tesseract'>\n"
         "</head>\n<body>\n";
-    fprintf(fp, "%s", html_header);
+    fprintf(fout, "%s", html_header);
   } 
-  fwrite(text_out.string(), 1, text_out.length(), fp);
+  fwrite(text_out.string(), 1, text_out.length(), fout);
   if (output_hocr)
-    fprintf(fp, "</body>\n</html>\n");
-  fclose(fp);
+    fprintf(fout, "</body>\n</html>\n");
+  fclose(fout);
 
   return 0;                      //Normal exit
 }
