@@ -79,8 +79,10 @@ class Trie : public Dawg {
     return make_edge_ref(node_ref, edge_index);
   }
 
-  // Fills the given NodeChildVector with all the unichar ids (and the
-  // corresponding EDGE_REFs) for which there is an edge out of this node.
+  /**
+   * Fills the given NodeChildVector with all the unichar ids (and the
+   * corresponding EDGE_REFs) for which there is an edge out of this node.
+   */
   void unichar_ids_of(NODE_REF node, NodeChildVector *vec) const {
     const EDGE_VECTOR &forward_edges = nodes_[node]->forward_edges;
     for (int i = 0; i < forward_edges.size(); ++i) {
@@ -89,15 +91,19 @@ class Trie : public Dawg {
     }
   }
 
-  // Returns the next node visited by following the edge
-  // indicated by the given EDGE_REF.
+  /**
+   * Returns the next node visited by following the edge
+   * indicated by the given EDGE_REF.
+   */
   NODE_REF next_node(EDGE_REF edge_ref) const {
     if (edge_ref == NO_EDGE || num_edges_ == 0) return NO_EDGE;
     return next_node_from_edge_rec(*deref_edge_ref(edge_ref));
   }
 
-  // Returns true if the edge indicated by the given EDGE_REF
-  // marks the end of a word.
+  /**
+   * Returns true if the edge indicated by the given EDGE_REF
+   * marks the end of a word.
+   */
   bool end_of_word(EDGE_REF edge_ref) const {
     if (edge_ref == NO_EDGE || num_edges_ == 0) return false;
     return end_of_word_from_edge_rec(*deref_edge_ref(edge_ref));
@@ -204,7 +210,7 @@ class Trie : public Dawg {
                         bool word_end, UNICHAR_ID unichar_id);
 
   // Adds forward edge linkage from node1 to node2 and the corresponding
-  // backwad edge linkage in the other direction.
+  // backward edge linkage in the other direction.
   bool add_new_edge(NODE_REF node1, NODE_REF node2,
                     bool word_end, UNICHAR_ID unichar_id) {
     return (add_edge_linkage(node1, node2, FORWARD_EDGE,
