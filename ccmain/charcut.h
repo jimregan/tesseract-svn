@@ -98,6 +98,7 @@ class PIXROW:public ELIST_LINK
 
     /**
      * @param imlines image array
+     * @param imbox image box
      * @param prev for prev blob
      * @param next for next blob
      * @param foreground_colour 0 or 1
@@ -110,6 +111,7 @@ class PIXROW:public ELIST_LINK
 
     /**
      * @param imlines box of imlines extnt
+     * @param im_box image box
      * @param row row containing word
      * @param clip_image unscaled char image
      * @param baseline_pos baseline ht in image
