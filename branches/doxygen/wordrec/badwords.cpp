@@ -16,9 +16,9 @@
  ** limitations under the License.
  ******************************************************************************/
 
-/**----------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------
           Include Files and Type Defines
-----------------------------------------------------------------------------**/
+-----------------------------------------------------------------------------*/
 #include "general.h"
 #include "oldheap.h"
 #include "callcpp.h"
@@ -48,10 +48,11 @@ BOOL_VAR (tessedit_save_stats, FALSE, "Save final recognition statistics");
  *
  * @param File open text file to print bad words to
  *
- * Globals: #BadWords heap that bad words are stored in
+ * Globals: 
+ * - BadWords heap that bad words are stored in
  *
- * Exceptions: none
- * History: Thu Apr 25 08:57:08 1991, DSJ, Created.
+ * @note Exceptions: none
+ * @note History: Thu Apr 25 08:57:08 1991, DSJ, Created.
  */
 void PrintBadWords(FILE *File) {
   HEAPENTRY NextWord;
@@ -82,7 +83,8 @@ void PrintBadWords(FILE *File) {
  * @param Word bad word to be saved
  * @param Certainty certainty of word
  *
- * Globals: #BadWords heap to keep bad words in
+ * Globals: 
+ * - BadWords heap to keep bad words in
  *
  * History: Thu Apr 25 08:41:00 1991, DSJ, Created.
  */
