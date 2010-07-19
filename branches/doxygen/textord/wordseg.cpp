@@ -54,11 +54,11 @@ extern /*"C" */ ETEXT_DESC *global_monitor;     //progress monitor
 #define BLOCK_STATS_CLUSTERS  10
 
 
-/**********************************************************************
- * make_single_word
+/**
+ * @name make_single_word
  *
  * Arrange the blobs into one word. There is no fixed pitch detection.
- **********************************************************************/
+ */
 
 void make_single_word(bool one_blob, TO_ROW_LIST *rows, ROW_LIST* real_rows) {
   TO_ROW_IT to_row_it(rows);
@@ -95,18 +95,17 @@ void make_single_word(bool one_blob, TO_ROW_LIST *rows, ROW_LIST* real_rows) {
   row_it.add_after_then_move(real_row);
 }
 
-/**********************************************************************
- * make_words
+/**
+ * @name make_words
  *
  * Arrange the blobs into words.
- **********************************************************************/
+ */
 
-void make_words(                             //make words
-                ICOORD page_tr,              //top right
-                float gradient,              //page skew
-                BLOCK_LIST *blocks,          //block list
-                TO_BLOCK_LIST *land_blocks,  //rotated for landscape
-                TO_BLOCK_LIST *port_blocks,  //output list
+void make_words(ICOORD page_tr,              //< top right
+                float gradient,              //< page skew
+                BLOCK_LIST *blocks,          //< block list
+                TO_BLOCK_LIST *land_blocks,  //< rotated for landscape
+                TO_BLOCK_LIST *port_blocks,  //< output list
                 tesseract::Tesseract* tess
                ) {
   TO_BLOCK_IT block_it;          //iterator
@@ -130,17 +129,16 @@ void make_words(                             //make words
 }
 
 
-/**********************************************************************
- * set_row_spaces
+/**
+ * @name set_row_spaces
  *
  * Set the min_space and max_nonspace members of the row so that
  * the blobs can be arranged into words.
- **********************************************************************/
+ */
 
-void set_row_spaces(                  //find space sizes
-                    TO_BLOCK *block,  //block to do
-                    FCOORD rotation,  //for drawing
-                    BOOL8 testing_on  //correct orientation
+void set_row_spaces(TO_BLOCK *block,  //< block to do
+                    FCOORD rotation,  //< for drawing
+                    BOOL8 testing_on  //< correct orientation
                    ) {
   inT32 maxwidth;                //of widest space
   TO_ROW *row;                   //current row
@@ -183,18 +181,17 @@ void set_row_spaces(                  //find space sizes
 }
 
 
-/**********************************************************************
- * row_words
+/**
+ * @name row_words
  *
  * Compute the max nonspace and min space for the row.
- **********************************************************************/
+ */
 
-inT32 row_words(                  //compute space size
-                TO_BLOCK *block,  //block it came from
-                TO_ROW *row,      //row to operate on
-                inT32 maxwidth,   //max expected space size
-                FCOORD rotation,  //for drawing
-                BOOL8 testing_on  //for debug
+inT32 row_words(TO_BLOCK *block,  //< block it came from
+                TO_ROW *row,      //< row to operate on
+                inT32 maxwidth,   //< max expected space size
+                FCOORD rotation,  //< for drawing
+                BOOL8 testing_on  //< for debug
                ) {
   BOOL8 testing_row;             //contains testpt
   BOOL8 prev_valid;              //if decent size
@@ -356,18 +353,18 @@ inT32 row_words(                  //compute space size
 }
 
 
-/**********************************************************************
- * row_words2
+/**
+ * @name row_words2
  *
  * Compute the max nonspace and min space for the row.
- **********************************************************************/
+ */
 
 inT32 row_words2(                  //compute space size
-                 TO_BLOCK *block,  //block it came from
-                 TO_ROW *row,      //row to operate on
-                 inT32 maxwidth,   //max expected space size
-                 FCOORD rotation,  //for drawing
-                 BOOL8 testing_on  //for debug
+                 TO_BLOCK *block,  //< block it came from
+                 TO_ROW *row,      //< row to operate on
+                 inT32 maxwidth,   //< max expected space size
+                 FCOORD rotation,  //< for drawing
+                 BOOL8 testing_on  //< for debug
                 ) {
   BOOL8 testing_row;             //contains testpt
   BOOL8 prev_valid;              //if decent size
@@ -512,15 +509,15 @@ inT32 row_words2(                  //compute space size
 }
 
 
-/**********************************************************************
- * make_real_words
+/**
+ * @name make_real_words
  *
  * Convert a TO_BLOCK to a BLOCK.
- **********************************************************************/
+ */
 
 void make_real_words(                  //find lines
-                     TO_BLOCK *block,  //block to do
-                     FCOORD rotation   //for drawing
+                     TO_BLOCK *block,  //< block to do
+                     FCOORD rotation   //< for drawing
                     ) {
   TO_ROW *row;                   //current row
   TO_ROW_IT row_it = block->get_rows ();
@@ -564,16 +561,16 @@ void make_real_words(                  //find lines
 }
 
 
-/**********************************************************************
- * make_rep_words
+/**
+ * @name make_rep_words
  *
  * Fabricate a real row from only the repeated blob words.
  * Get the xheight from the block as it may be more meaningful.
- **********************************************************************/
+ */
 
 ROW *make_rep_words(                 //make a row
-                    TO_ROW *row,     //row to convert
-                    TO_BLOCK *block  //block it lives in
+                    TO_ROW *row,     //< row to convert
+                    TO_BLOCK *block  //< block it lives in
                    ) {
   inT32 xstarts[2];              //ends of row
   ROW *real_row;                 //output row
@@ -603,20 +600,20 @@ ROW *make_rep_words(                 //make a row
 }
 
 
-/**********************************************************************
- * make_real_word
+/**
+ * @name make_real_word
  *
  * Construct a WERD from a given number of adjacent entries in a
  * list of BLOBNBOXs.
- **********************************************************************/
+ */
 
 WERD *make_real_word(                      //make a WERD
-                     BLOBNBOX_IT *box_it,  //iterator
-                     inT32 blobcount,      //no of blobs to use
-                     BOOL8 bol,            //start of line
-                     BOOL8 fuzzy_sp,       //fuzzy space
-                     BOOL8 fuzzy_non,      //fuzzy non-space
-                     uinT8 blanks          //no of blanks
+                     BLOBNBOX_IT *box_it,  //< iterator
+                     inT32 blobcount,      //< no of blobs to use
+                     BOOL8 bol,            //< start of line
+                     BOOL8 fuzzy_sp,       //< fuzzy space
+                     BOOL8 fuzzy_non,      //< fuzzy non-space
+                     uinT8 blanks          //< no of blanks
                     ) {
   OUTLINE_IT out_it;             //outlines
   C_OUTLINE_IT cout_it;

@@ -149,11 +149,11 @@ WERD_CHOICE *get_best_delete_other(WERD_CHOICE *choice1,
 }
 
 
-/**********************************************************************
+/**
  * good_choice
  *
- * Return TRUE if a good answer is found for the unknown blob rating.
- **********************************************************************/
+ * @return TRUE if a good answer is found for the unknown blob rating.
+ */
 int good_choice(const WERD_CHOICE &choice) {
   register float certainty;
   if (tord_similarity_enable) {
@@ -169,13 +169,13 @@ int good_choice(const WERD_CHOICE &choice) {
 }
 
 
-/**********************************************************************
+namespace tesseract {
+/**
  * add_document_word
  *
  * Add a word found on this document to the document specific
  * dictionary.
- **********************************************************************/
-namespace tesseract {
+ */
 void Dict::add_document_word(const WERD_CHOICE &best_choice) {
   // Do not add hyphenated word parts to the document dawg.
   // hyphen_word_ will be non-NULL after the set_hyphen_word() is
@@ -220,13 +220,13 @@ void Dict::add_document_word(const WERD_CHOICE &best_choice) {
 }
 
 
-/**********************************************************************
+/**
  * adjust_non_word
  *
  * Assign an adjusted value to a string that is a non-word.  The value
  * that this word choice has is based on case and punctuation rules.
  * The adjustment value applied is stored in adjust_factor upon return.
- **********************************************************************/
+ */
 void Dict::adjust_non_word(WERD_CHOICE *word, float *adjust_factor) {
   float new_rating;
   if (permute_debug)
@@ -253,12 +253,12 @@ void Dict::adjust_non_word(WERD_CHOICE *word, float *adjust_factor) {
 }
 
 
-/**********************************************************************
+/**
  * init_permute
  *
  * Initialize anything that needs to be set up for the permute
  * functions.
- **********************************************************************/
+ */
 void Dict::init_permute() {
   STRING name;
   STRING &lang = getImage()->getCCUtil()->lang;
@@ -343,7 +343,7 @@ void Dict::end_permute() {
 }
 
 
-/**********************************************************************
+/**
  * permute_all
  *
  * Permute all the characters together using all of the different types
@@ -352,7 +352,7 @@ void Dict::end_permute() {
  *
  * Note: order of applying permuters does matter, since the latter
  * permuter will be recorded if the resulting word ratings are the same.
- **********************************************************************/
+ */
 WERD_CHOICE *Dict::permute_all(const BLOB_CHOICE_LIST_VECTOR &char_choices,
                                float rating_limit,
                                WERD_CHOICE *raw_choice) {
@@ -440,10 +440,10 @@ int get_top_word_script(const BLOB_CHOICE_LIST_VECTOR &char_choices,
   return max_sid;
 }
 
-/**********************************************************************
+/**
  * Checks whether the dominant word script, if there is one, matches
  * the given target script ID.
- **********************************************************************/
+ */
 bool Dict::word_script_eq(const BLOB_CHOICE_LIST_VECTOR &char_choices,
                           int target_sid) {
   int max_sid = get_top_word_script(char_choices, getUnicharset());
@@ -454,12 +454,12 @@ bool Dict::word_script_eq(const BLOB_CHOICE_LIST_VECTOR &char_choices,
   return (max_sid > 0 && max_sid == target_sid);
 }
 
-/**********************************************************************
+/**
  * Iterate through all the character choices (for a single blob) and
  * return the first that matches the given type, which is one of 'aA0px*',
  * for lower, upper, digit, punctuation, other, and 'any', respectively.
  * If not match is found, a NULL is returned.
- **********************************************************************/
+ */
 BLOB_CHOICE* find_choice_by_type(
     BLOB_CHOICE_LIST *char_choices,
     char target_type,
@@ -486,13 +486,14 @@ BLOB_CHOICE* find_choice_by_type(
   return NULL;
 }
 
-/**********************************************************************
+/**
  * Iterate through all the character choices (for a single blob) and
  * return the first that matches the target script ID.  If backup_sid
  * is not 0, then a match on either the target or backup sid is allowed.
  * Note that there is no preference between a target or backup sid.
  * To search for another sid only if no target_sid matched, use
  * secondary_sid.
+ * 
  * So for example, to find first Han or Common char choice, do
  *   find_choice_by_script(cchoice, han_sid, common_sid, 0);
  * To find first Han choice, but allow Common if none is found, do
@@ -523,14 +524,14 @@ BLOB_CHOICE* find_choice_by_script(
   return NULL;
 }
 
-/**********************************************************************
+/**
  * Incorporate segmentation cost into the word rating.  This is done
  * through a mutliplier wordseg_rating_adjust_factor which is determined
  * in bestfirst.cpp during state evaluation.  This is not the cleanest
  * way to do this.  It would be better to reorganize the SEARCH_STATE
  * to keep track of associated states, or do the rating adjustment
  * outside the permuter in evalaute_state.
- **********************************************************************/
+ */
 void Dict::incorporate_segcost(WERD_CHOICE *word) {
   if (!word || wordseg_rating_adjust_factor <= 0) return;
 
@@ -542,7 +543,7 @@ void Dict::incorporate_segcost(WERD_CHOICE *word) {
             old_rating, wordseg_rating_adjust_factor, new_rating);
 }
 
-/**********************************************************************
+/**
  * Try flipping characters in a word to get better script consistency.
  * Similar to how upper/lower case checking is done in top_choice_permuter,
  * this permuter tries to suggest a more script-consistent choice AND
@@ -550,7 +551,7 @@ void Dict::incorporate_segcost(WERD_CHOICE *word) {
  * adjust_non_word functionality.  However, instead of penalizing an
  * inconsistent word with a > 1 multiplier, we reward the script-consistent
  * choice with a < 1 multiplier.
- **********************************************************************/
+ */
 WERD_CHOICE* Dict::permute_script_words(
     const BLOB_CHOICE_LIST_VECTOR &char_choices) {
   if (char_choices.length() > MAX_WERD_LENGTH)
@@ -626,12 +627,12 @@ WERD_CHOICE* Dict::permute_script_words(
   return current_word;
 }
 
-/**********************************************************************
+/**
  * permute_characters
  *
  * Permute these characters together according to each of the different
  * permuters that are enabled.
- **********************************************************************/
+ */
 void Dict::permute_characters(const BLOB_CHOICE_LIST_VECTOR &char_choices,
                               float limit,
                               WERD_CHOICE *best_choice,
@@ -670,11 +671,11 @@ void Dict::permute_characters(const BLOB_CHOICE_LIST_VECTOR &char_choices,
   delete this_choice;
 }
 
-/**********************************************************************
+/**
  * permute_compound_words
  *
  * Return the top choice for each character as the choice for the word.
- **********************************************************************/
+ */
 WERD_CHOICE *Dict::permute_compound_words(
     const BLOB_CHOICE_LIST_VECTOR &char_choices,
     float rating_limit) {
@@ -726,15 +727,15 @@ WERD_CHOICE *Dict::permute_compound_words(
 }
 
 
-/**********************************************************************
+/**
  * permute_subword
  *
  * Permute a part of a compound word this subword is bounded by hyphens
  * and the start and end of the word.  Call the standard word permute
  * function on a set of choices covering only part of the original
  * word.  When it is done reclaim the memory that was used in the
- * excercise.
- **********************************************************************/
+ * exercise.
+ */
 void Dict::permute_subword(const BLOB_CHOICE_LIST_VECTOR &char_choices,
                            float rating_limit,
                            int start,
@@ -783,14 +784,14 @@ void Dict::permute_subword(const BLOB_CHOICE_LIST_VECTOR &char_choices,
   EnableChoiceAccum();
 }
 
-/**********************************************************************
+/**
  * permute_top_choice
  *
  * Return the top choice for each character as the choice for the word.
  * In addition a choice is created for the best lower and upper case
  * non-words.  In each character position the best lower (or upper) case
  * character is substituted for the best overall character.
- **********************************************************************/
+ */
 WERD_CHOICE *Dict::permute_top_choice(
     const BLOB_CHOICE_LIST_VECTOR &char_choices,
     float* rating_limit,
@@ -1015,17 +1016,24 @@ WERD_CHOICE *Dict::permute_top_choice(
 }
 
 
-/**********************************************************************
- * choose_il1
+/**
+ * @name choose_il1
  *
  * Choose between the candidate il1 chars.
- **********************************************************************/
-const char* Dict::choose_il1(const char *first_char,        //first choice
-                             const char *second_char,       //second choice
-                             const char *third_char,        //third choice
-                             const char *prev_char,         //prev in word
-                             const char *next_char,         //next in word
-                             const char *next_next_char) {  //after next next in word
+ *
+ * @param first_char first choice
+ * @param second_char second choice
+ * @param third_char third choice
+ * @param prev_char prev in word
+ * @param next_char next in word
+ * @param next_next_char after next next in word
+ */
+const char* Dict::choose_il1(const char *first_char,
+                             const char *second_char,
+                             const char *third_char,
+                             const char *prev_char,
+                             const char *next_char,
+                             const char *next_next_char) {
   inT32 type1;                   //1/I/l type of first choice
   inT32 type2;                   //1/I/l type of second choice
   inT32 type3;                   //1/I/l type of third choice
@@ -1165,13 +1173,13 @@ int Dict::valid_word(const WERD_CHOICE &word, bool numbers_ok) {
   }
 }
 
-//
-// Return true if the word contains a valid punctuation pattern.
-//
-// Note: Since the domains of punctuation symbols and symblos
-// used in numbers are not disjoint, a valid number might contain
-// an invalid punctuation pattern (e.g. .99).
-//
+/**
+ * @return true if the word contains a valid punctuation pattern.
+ *
+ * Note: Since the domains of punctuation symbols and symbols
+ * used in numbers are not disjoint, a valid number might contain
+ * an invalid punctuation pattern (e.g. .99).
+ */
 bool Dict::valid_punctuation(const WERD_CHOICE &word) {
   if (word.length() == 0) return NO_PERM;
   int i;
@@ -1197,7 +1205,7 @@ bool Dict::valid_punctuation(const WERD_CHOICE &word) {
   return false;
 }
 
-/**********************************************************************
+/**
  * fragment_state
  *
  * Given the current char choice and information about previously seen
@@ -1205,23 +1213,23 @@ bool Dict::valid_punctuation(const WERD_CHOICE &word) {
  * present and whether they can be concatenated.
  *
  * The given prev_char_frag_info contains:
- *  -- fragment: if not NULL contains information about immediately
- *     preceeding fragmented character choice
- *  -- num_fragments: number of fragments that have been used so far
- *     to construct a character
- *  -- certainty: certainty of the current choice or minimum
- *     certainty of all fragments concatenated so far
- *  -- rating: rating of the current choice or sum of fragment
- *     ratings concatenated so far
+ * - fragment: if not NULL contains information about immediately
+ *   preceeding fragmented character choice
+ * - num_fragments: number of fragments that have been used so far
+ *   to construct a character
+ * - certainty: certainty of the current choice or minimum
+ *   certainty of all fragments concatenated so far
+ * - rating: rating of the current choice or sum of fragment
+ *   ratings concatenated so far
  *
  * The output char_frag_info is filled in as follows:
- * -- character: is set to be NULL if the choice is a non-matching
- *    or non-ending fragment piece; is set to unichar of the given choice
- *    if it represents a regular character or a matching ending fragment
- * -- fragment,num_fragments,certainty,rating are set as described above
+ * - character: is set to be NULL if the choice is a non-matching
+ *   or non-ending fragment piece; is set to unichar of the given choice
+ *   if it represents a regular character or a matching ending fragment
+ * - fragment,num_fragments,certainty,rating are set as described above
  *
- * Returns false if a non-matching fragment is discovered, true otherwise.
- **********************************************************************/
+ * @return false if a non-matching fragment is discovered, true otherwise.
+ */
 bool Dict::fragment_state_okay(UNICHAR_ID curr_unichar_id,
                                float curr_rating, float curr_certainty,
                                const CHAR_FRAGMENT_INFO *prev_char_frag_info,
@@ -1298,14 +1306,14 @@ bool Dict::fragment_state_okay(UNICHAR_ID curr_unichar_id,
   }
   return true;
 }
-/**********************************************************************
+/**
  * top_fragments_permute_and_select
  *
  * Creates a copy of character choices list that contain only fragments
  * and the best non-fragmented character choice.
  * Permutes character in this shortened list, builds characters from
  * fragments if possible and returns a better choice if found.
- **********************************************************************/
+ */
 WERD_CHOICE *Dict::top_fragments_permute_and_select(
     const BLOB_CHOICE_LIST_VECTOR &char_choices,
     float rating_limit) {
@@ -1369,12 +1377,12 @@ WERD_CHOICE *Dict::top_fragments_permute_and_select(
   return best_choice;
 }
 
-/**********************************************************************
+/**
  * permute_choices
  *
  * Call append_choices() for each BLOB_CHOICE in BLOB_CHOICE_LIST
  * with the given char_choice_index in char_choices.
- **********************************************************************/
+ */
 void Dict::permute_choices(
     const char *debug,
     const BLOB_CHOICE_LIST_VECTOR &char_choices,
@@ -1404,14 +1412,14 @@ void Dict::permute_choices(
   }
 }
 
-/**********************************************************************
+/**
  * append_choices
  *
  * Check to see whether or not the next choice is worth appending to
  * the word being generated. If so then keep going deeper into the word.
  *
  * This function assumes that Dict::go_deeper_fxn_ is set.
- **********************************************************************/
+ */
 void Dict::append_choices(
     const char *debug,
     const BLOB_CHOICE_LIST_VECTOR &char_choices,
@@ -1462,12 +1470,12 @@ void Dict::append_choices(
   word->set_permuter(old_permuter);
 }
 
-/**********************************************************************
+/**
  * go_deeper_top_fragments_fxn
  *
  * If the choice being composed so far could be better
  * than best_choice keep exploring choices.
- **********************************************************************/
+ */
 void Dict::go_deeper_top_fragments_fxn(
     const char *debug, const BLOB_CHOICE_LIST_VECTOR &char_choices,
     int char_choice_index,
