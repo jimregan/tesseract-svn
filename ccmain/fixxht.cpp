@@ -79,24 +79,30 @@ EXTERN STRING_VAR (chs_bl,
 "Baseline chars");
 EXTERN STRING_VAR (chs_non_ambig_desc, "gq", "Reliable descender chars");
 
-/*************************************************************************
+/**
  * re_estimate_x_ht()
  *
  * Walk the blobs in the word together with the text string and reject map.
  * NOTE: All evaluation is done on the baseline normalised word. This is so that
  * the TBOX class can be used (integer). The reasons for this are:
+ *
  *   a) We must use the outword - ie the Tess result
+ *
  *   b) The outword is always converted to integer representation as that is how
  *      Tess works
+ *
  *   c) We would like to use the TBOX class, cos its there - this is integer
  *      precision.
+ *
  *   d) If we de-normed the outword we would get rounding errors and would find
  *      that integers are too imprecise (x-height around 15 pixels instead of a
  *      scale of 128 in bln form.
+ *
  *   CONVINCED?
  *
  * A) Try to re-estimatate x-ht and caps ht from confirmed pts in word.
  *
+ * @verbatim
  *    FOR each non reject blob
  *       IF char is baseline posn ambiguous
  *			Remove ambiguity by comparing its posn with respect to baseline.
@@ -126,6 +132,7 @@ EXTERN STRING_VAR (chs_non_ambig_desc, "gq", "Reliable descender chars");
  *		ELSE
  *			Use the value for the previous word or the row value if this is the
  *			first word in the block. NO!!!
+ * @endverbatim
  *
  * B) Add in case ambiguous blobs based on confirmed x-ht/caps ht, changing case
  *    as necessary. Reestimate caps ht and x-ht as in A, using the extended
@@ -136,8 +143,8 @@ EXTERN STRING_VAR (chs_non_ambig_desc, "gq", "Reliable descender chars");
  *************************************************************************/
 
 void re_estimate_x_ht(                     //improve for 1 word
-                      WERD_RES *word_res,  //word to do
-                      float *trial_x_ht    //new match value
+                      WERD_RES *word_res,  //< word to do
+                      float *trial_x_ht    //< new match value
                      ) {
   PBLOB_IT blob_it;
   inT16 blob_ht_above_baseline;
@@ -146,10 +153,10 @@ void re_estimate_x_ht(                     //improve for 1 word
   inT16 i;
   inT16 offset;
 
-  STATS all_blobs_ht (0, 300);   //every blob in word
-  STATS x_ht (0, 300);           //confirmed pts in wd
-  STATS caps_ht (0, 300);        //confirmed pts in wd
-  STATS case_ambig (0, 300);     //lower case ambigs
+  STATS all_blobs_ht (0, 300);   //< every blob in word
+  STATS x_ht (0, 300);           //< confirmed pts in wd
+  STATS caps_ht (0, 300);        //< confirmed pts in wd
+  STATS case_ambig (0, 300);     //< lower case ambigs
 
   inT16 rej_blobs_count = 0;
   inT16 rej_blobs_max_height = 0;
@@ -496,12 +503,13 @@ void re_estimate_x_ht(                     //improve for 1 word
 }
 
 
-/*************************************************************************
- * check_block_occ()
+namespace tesseract {
+/**
+ * @name check_block_occ()
+ *
  * Checks word for coarse block occupancy, rejecting more chars and flipping
  * case of case ambiguous chars as required.
- *************************************************************************/
-namespace tesseract {
+ */
 void Tesseract::check_block_occ(WERD_RES *word_res) {
   PBLOB_IT blob_it;
   STRING new_string;
@@ -580,12 +588,12 @@ void Tesseract::check_block_occ(WERD_RES *word_res) {
 }
 }  // namespace tesseract
 
-/*************************************************************************
+/**
  * check_blob_occ()
  *
  * Checks blob for position relative to position above baseline
  * Return 0 for reject, or (possibly case shifted) confirmed char
- *************************************************************************/
+ */
 
 void check_blob_occ(char* proposed_char,
                     inT16 blob_ht_above_baseline,
@@ -722,9 +730,8 @@ void improve_estimate(WERD_RES *word_res,
     est_caps_ht = new_val;
 }
 
-
-void reject_ambigs(  //rej any accepted xht ambig chars
-                   WERD_RES *word) {
+///reject any accepted xht ambig chars
+void reject_ambigs(WERD_RES *word) {
   const char *word_str;
   int i = 0;
 
@@ -736,12 +743,11 @@ void reject_ambigs(  //rej any accepted xht ambig chars
   }
 }
 
-
-void est_ambigs(                          //xht ambig ht stats
-                WERD_RES *word_res,
+///xht ambiguous height stats
+void est_ambigs(WERD_RES *word_res,
                 STATS &stats,
-                float *ambig_lc_x_est,    //xht est
-                float *ambig_uc_caps_est  //caps est
+                float *ambig_lc_x_est,    //< xht est
+                float *ambig_uc_caps_est  //< caps est
                ) {
   float x_ht_ok_variation;
   STATS short_ambigs (0, 300);
@@ -804,12 +810,12 @@ void est_ambigs(                          //xht ambig ht stats
 }
 
 
-/*************************************************************************
+/**
  * dodgy_blob()
- * Returns true if the blob has more than one outline, one above the other.
+ * @return true if the blob has more than one outline, one above the other.
  * These are dodgy as the top blob could be noise, causing the bounding box xht
  * to be misleading
- *************************************************************************/
+ */
 
 BOOL8 dodgy_blob(PBLOB *blob) {
   OUTLINE_IT outline_it = blob->out_list ();
