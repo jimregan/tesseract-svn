@@ -208,20 +208,22 @@ double_VAR(classify_pp_side_pad, 2.5, "Proto Pruner Side Pad");
               Public Code
 -----------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-void AddIntClass(INT_TEMPLATES Templates, CLASS_ID ClassId, INT_CLASS Class) {
-/*
- ** Parameters:
- **   Templates templates to add new class to
- **   ClassId   class id to associate new class with
- **   Class   class data structure to add to templates
- ** Globals: none
- ** Operation: This routine adds a new class structure to a set of
- **                templates. Classes have to be added to Templates in
- **                the order of increasing ClassIds.
- ** Return: none
- ** Exceptions: none
- ** History: Mon Feb 11 11:52:08 1991, DSJ, Created.
+/**
+ * This routine adds a new class structure to a set of
+ * templates. Classes have to be added to Templates in
+ * the order of increasing ClassIds.
+ *
+ * Globals: 
+ * - none
+ *
+ * @param Templates templates to add new class to
+ * @param ClassId   class id to associate new class with
+ * @param Class   class data structure to add to templates
+ *
+ * @note Exceptions: none
+ * @note History: Mon Feb 11 11:52:08 1991, DSJ, Created.
  */
+void AddIntClass(INT_TEMPLATES Templates, CLASS_ID ClassId, INT_CLASS Class) {
   int Pruner;
   uinT32 *Word;
 
@@ -1832,18 +1834,20 @@ void InitTableFiller (FLOAT32 EndPad, FLOAT32 SidePad,
 
 /*---------------------------------------------------------------------------*/
 #ifndef GRAPHICS_DISABLED
-void RenderIntFeature(void *window, INT_FEATURE Feature, C_COL Color) {
-/*
- ** Parameters:
- **   ShapeList shape list to add feature rendering to
- **   Feature   feature to be rendered
- **   Color   color to use for feature rendering
- ** Globals: none
- ** Operation: This routine renders the specified feature into ShapeList.
- ** Return: New shape list with rendering of Feature added.
- ** Exceptions: none
- ** History: Thu Mar 21 14:57:41 1991, DSJ, Created.
+/**
+ * This routine renders the specified feature into ShapeList.
+ *
+ * Globals: none
+ *
+ * @param ShapeList shape list to add feature rendering to
+ * @param Feature   feature to be rendered
+ * @param Color   color to use for feature rendering
+ *
+ * @return New shape list with rendering of Feature added.
+ * @note Exceptions: none
+ * @note History: Thu Mar 21 14:57:41 1991, DSJ, Created.
  */
+void RenderIntFeature(void *window, INT_FEATURE Feature, C_COL Color) {
   FLOAT32 X, Y, Dx, Dy, Length;
 
   c_line_color_index(window, Color);
@@ -1864,10 +1868,6 @@ void RenderIntFeature(void *window, INT_FEATURE Feature, C_COL Color) {
 
 
 /*---------------------------------------------------------------------------*/
-void RenderIntProto(void *window,
-                    INT_CLASS Class,
-                    PROTO_ID ProtoId,
-                    C_COL Color) {
 /*
  ** Parameters:
  **   ShapeList shape list to append proto rendering onto
@@ -1882,6 +1882,10 @@ void RenderIntProto(void *window,
  ** Exceptions: none
  ** History: Thu Mar 21 10:21:09 1991, DSJ, Created.
  */
+void RenderIntProto(void *window,
+                    INT_CLASS Class,
+                    PROTO_ID ProtoId,
+                    C_COL Color) {
   PROTO_SET ProtoSet;
   INT_PROTO Proto;
   int ProtoSetIndex;
@@ -1929,20 +1933,24 @@ void RenderIntProto(void *window,
 #endif
 
 /*---------------------------------------------------------------------------*/
-int TruncateParam(FLOAT32 Param, int Min, int Max, char *Id) {
-/*
- ** Parameters:
- **   Param   parameter value to be truncated
- **   Min, Max  parameter limits (inclusive)
- **   Id    string id of parameter for error messages
- ** Globals: none
- ** Operation: This routine truncates Param to lie within the range
- **   of Min-Max inclusive.  If a truncation is performed, and
- **   Id is not null, an warning message is printed.
- ** Return: Truncated parameter.
- ** Exceptions: none
- ** History: Fri Feb  8 11:54:28 1991, DSJ, Created.
+/**
+ * This routine truncates Param to lie within the range
+ * of Min-Max inclusive.  If a truncation is performed, and
+ * Id is not null, an warning message is printed.
+ *
+ * Globals
+ * - none
+ * 
+ * @param Param   parameter value to be truncated
+ * @param Min  parameter limits (inclusive)
+ * @param Max  parameter limits (inclusive)
+ * @param Id    string id of parameter for error messages
+ *
+ * @return Truncated parameter.
+ * @note Exceptions: none
+ * @note History: Fri Feb  8 11:54:28 1991, DSJ, Created.
  */
+int TruncateParam(FLOAT32 Param, int Min, int Max, char *Id) {
   if (Param < Min) {
     if (Id)
       cprintf("Warning: Param %s truncated from %f to %d!\n",
@@ -1960,11 +1968,11 @@ int TruncateParam(FLOAT32 Param, int Min, int Max, char *Id) {
 
 /*---------------------------------------------------------------------------*/
 
-void InitIntMatchWindowIfReqd() {
-/*
- **     Operation: Initializes the int matcher window if it is not already
- **     initialized.
+/**
+ * Initializes the int matcher window if it is not already
+ * initialized.
  */
+void InitIntMatchWindowIfReqd() {
   if (IntMatchWindow == NULL) {
     IntMatchWindow = c_create_window("IntMatchWindow", 50, 200,
                                      520, 520,
@@ -1981,11 +1989,11 @@ void InitIntMatchWindowIfReqd() {
   }
 }
 
-void InitProtoDisplayWindowIfReqd() {
-/*
- **     Operation: Initializes the proto display window if it is not already
- **     initialized.
+/**
+ * Initializes the proto display window if it is not already
+ * initialized.
  */
+void InitProtoDisplayWindowIfReqd() {
   if (ProtoDisplayWindow == NULL) {
     ProtoDisplayWindow = c_create_window("ProtoDisplayWindow", 50, 200,
                                          520, 520,
@@ -1993,11 +2001,11 @@ void InitProtoDisplayWindowIfReqd() {
   }
 }
 
-void InitFeatureDisplayWindowIfReqd() {
-/*
- **     Operation: Initializes the feature display window if it is not already
- **     initialized.
+/**
+ * Initializes the feature display window if it is not already
+ * initialized.
  */
+void InitFeatureDisplayWindowIfReqd() {
   if (FeatureDisplayWindow == NULL) {
     FeatureDisplayWindow = c_create_window("FeatureDisplayWindow", 50, 200,
                                            520, 520,
