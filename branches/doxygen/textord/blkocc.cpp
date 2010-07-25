@@ -57,23 +57,26 @@ EXTERN INT_VAR (blockocc_band_count, 4, "Number of bands used");
 EXTERN double_VAR (textord_underline_threshold, 0.5,
 "Fraction of width occupied");
 
-/* ********************************************************************
+/**
 A note on transitions.
 
 We want to record occupancy in various bands. In general we need to consider
 7 situations:
 
+@verbatim
 (1)     (2)  (3)             (4)
-\       /   \           /   \           /
+ \       /   \           /   \           /
 __\_____/_____\_________/_____\_________/______ Upper Limit
-  \   /       \       /       \       /
-  /   \        \-->--/         \--<--/     /-----\
-v     ^                                  /       \(7)
-\      \                                 \       /
-  \      \      /--<--\      /-->--\       \-----/
+   \   /       \       /       \       /
+   /   \        \-->--/         \--<--/     /-----\
+  v     ^                                  /       \(7)
+  \      \                                 \       /
+   \      \      /--<--\      /-->--\       \-----/
 ____\______\____/_______\____/_______\_________ Lower Limit
-  \      \  /         \  /         \
-          (5)          (6)
+     \      \  /         \  /         \
+            (5)          (6)
+@endverbatim
+
 We know that following "next" pointers around an outline keeps the black area
 on the LEFT. We only need be concerned with situations 1,2,3,5 and 7.
 4 and 6 can be ignored as they represent small incursions into a large black
@@ -87,7 +90,7 @@ find_region_type.
 
 An empty region type is used to denote entry to an adjacent band and return
 to the original band at the same x location.
-***********************************************************************/
+*/
 
 #define REGION_TYPE_EMPTY 0
 #define REGION_TYPE_OPEN_RIGHT 1
@@ -100,18 +103,18 @@ to the original band at the same x location.
 
 BAND bands[MAX_NUM_BANDS + 1];   // band defns
 
-/**********************************************************************
+/**
  * test_underline
  *
  * Check to see if the blob is an underline.
  * Return TRUE if it is.
- **********************************************************************/
+ */
 
 BOOL8 test_underline(                   //look for underlines
-                     BOOL8 testing_on,  //drawing blob
-                     PBLOB *blob,       //blob to test
-                     float baseline,    //coords of baseline
-                     float xheight      //height of line
+                     BOOL8 testing_on,  //< drawing blob
+                     PBLOB *blob,       //< blob to test
+                     float baseline,    //< coords of baseline
+                     float xheight      //< height of line
                     ) {
   inT16 occ;
   inT16 blob_width;              //width of blob
@@ -150,18 +153,18 @@ BOOL8 test_underline(                   //look for underlines
 }
 
 
-/**********************************************************************
+/**
  * test_underline
  *
  * Check to see if the blob is an underline.
  * Return TRUE if it is.
- **********************************************************************/
+ */
 
 BOOL8 test_underline(                   //look for underlines
-                     BOOL8 testing_on,  //drawing blob
-                     C_BLOB *blob,      //blob to test
-                     inT16 baseline,    //coords of baseline
-                     inT16 xheight      //height of line
+                     BOOL8 testing_on,  //< drawing blob
+                     C_BLOB *blob,      //< blob to test
+                     inT16 baseline,    //< coords of baseline
+                     inT16 xheight      //< height of line
                     ) {
   inT16 occ;
   inT16 blob_width;              //width of blob
@@ -221,16 +224,16 @@ BOOL8 test_underline(                   //look for underlines
 }
 
 
-/**********************************************************************
+/**
  * horizontal_cblob_projection
  *
  * Compute the horizontal projection of a cblob from its outlines
  * and add to the given STATS.
- **********************************************************************/
+ */
 
 void horizontal_cblob_projection(               //project outlines
-                                 C_BLOB *blob,  //blob to project
-                                 STATS *stats   //output
+                                 C_BLOB *blob,  //< blob to project
+                                 STATS *stats   //< output
                                 ) {
                                  //outlines of blob
   C_OUTLINE_IT out_it = blob->out_list ();
@@ -241,16 +244,16 @@ void horizontal_cblob_projection(               //project outlines
 }
 
 
-/**********************************************************************
+/**
  * horizontal_coutline_projection
  *
  * Compute the horizontal projection of a outline from its outlines
  * and add to the given STATS.
- **********************************************************************/
+ */
 
 void horizontal_coutline_projection(                     //project outlines
-                                    C_OUTLINE *outline,  //outline to project
-                                    STATS *stats         //output
+                                    C_OUTLINE *outline,  //< outline to project
+                                    STATS *stats         //< output
                                    ) {
   ICOORD pos;                    //current point
   ICOORD step;                   //edge step
@@ -276,10 +279,9 @@ void horizontal_coutline_projection(                     //project outlines
   }
 }
 
-
-void set_bands(                 //init from varibles
-               float baseline,  //top of bottom band
-               float xheight    //height of split band
+///init from variables
+void set_bands(float baseline,  //< top of bottom band
+               float xheight    //< height of split band
               ) {
   inT16 int_bl, int_xh;          //for band.set
 
@@ -303,8 +305,8 @@ void set_bands(                 //init from varibles
 
 
 void
-block_occ (PBLOB * blob,         //blob to do
-float occs[]                     //output histogram
+block_occ (PBLOB * blob,         //< blob to do
+float occs[]                     //< output histogram
 ) {
   int band_index;                //current band
   REGION_OCC *region;            //current segment
